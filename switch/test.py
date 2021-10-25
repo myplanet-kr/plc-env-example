@@ -42,4 +42,3 @@ try:
         time.sleep(0.1)
 finally:
     GPIO.cleanup()
-

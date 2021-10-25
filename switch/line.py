@@ -28,7 +28,7 @@ class line:
     
     def make_callback(self, server):
         [URL, headers, data] = get_request(server, self)
-        def get_func():
+        def get_func(_):
             print('%s line called'%self.name)
             r = requests.get(URL, headers=headers, data=data)
             print(r.content)
