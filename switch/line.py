@@ -27,10 +27,10 @@ class line:
         print('-----------------------------')
     
     def make_callback(self, server):
-        reqObj = get_request(server, self)
+        [URL, headers, data] = get_request(server, self)
         def get_func():
             print('%s line called'%self.name)
-            r = requests.get(reqObj.URL, headers=reqObj.headers, data=reqObj.data)
+            r = requests.get(URL, headers=headers, data=data)
             print(r.content)
         return get_func
             
