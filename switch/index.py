@@ -1,8 +1,8 @@
-import os
-import time
-
-import requests
 import RPi.GPIO as GPIO
+import time
+import requests
+import time
+import os
 
 print('# PLC Environment Activation')
 i = 0
