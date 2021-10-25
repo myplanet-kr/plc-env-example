@@ -31,7 +31,7 @@ class line:
         def get_func():
             print('%s line called'%self.name)
             r = requests.get(reqObj.URL, headers=reqObj.headers, data=reqObj.data)
-            print(r)
+            print(r.content)
         return get_func
             
 
