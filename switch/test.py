@@ -2,6 +2,7 @@
 
 import os
 import sys
+import time
 
 import RPi.GPIO as GPIO
 
@@ -35,4 +36,10 @@ for l in LINE_LIST:
     l.self_introduce()
     cb = l.make_callback(dotori_server)
     l.io_initialize(cb)
+try:
+    while 1:
+        print(".")
+        time.sleep(0.1)
+finally:
+    GPIO.cleanup()
 
