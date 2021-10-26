@@ -11,7 +11,8 @@ from ment import init_script, set_line_config_script
 from server import set_dotori_server_config_script
 
 sys.dont_write_bytecode = True
-BCM_LIST = [14, 23, 25]
+GPIO.setmode(GPIO.BCM)
+BCM_LIST = [14, 23, 24]
 LINE_LIST = []
 
 init_script()
@@ -30,7 +31,6 @@ while i < len(BCM_LIST):
 os.system('clear')
 
 print('생산 라인 설정 완료')
-GPIO.setmode(GPIO.BCM)
 
 for l in LINE_LIST:
     l.self_introduce()

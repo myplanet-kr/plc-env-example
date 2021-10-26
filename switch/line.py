@@ -30,7 +30,7 @@ class line:
         [URL, headers, data] = get_request(server, self)
         def get_func(_):
             print('%s line called'%self.name)
-            r = requests.get(URL, headers=headers, data=data)
+            r = requests.post(URL, headers=headers, data=data)
             print(r.content)
         return get_func
             
@@ -38,5 +38,5 @@ class line:
     def io_initialize(self, callback):
         GPIO.setup(self.BCM, GPIO.IN, pull_up_down=GPIO.PUD_DOWN)
         print('%d - BCM'%self.BCM)
-        GPIO.add_event_detect(self.BCM, GPIO.RISING, callback, bouncetime=200)
+        GPIO.add_event_detect(self.BCM, GPIO.RISING, callback, bouncetime=500)
     
