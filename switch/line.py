@@ -33,10 +33,7 @@ class line:
             r = requests.post(URL, headers=headers, data=data)
             print(r.content)
         return get_func
-            
 
     def io_initialize(self, callback):
         GPIO.setup(self.BCM, GPIO.IN, pull_up_down=GPIO.PUD_DOWN)
-        print('%d - BCM'%self.BCM)
         GPIO.add_event_detect(self.BCM, GPIO.RISING, callback, bouncetime=500)
-    

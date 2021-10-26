@@ -1,55 +1,42 @@
-import RPi.GPIO as GPIO
-import time
-import requests
-import time
+# -*- coding: utf-8 -*-
 import os
+import sys
+import time
 
-print('# PLC Environment Activation')
+import RPi.GPIO as GPIO
+
+from line import line
+from announce import init_script, set_line_config_script
+from server import set_dotori_server_config_script
+
+GPIO.setmode(GPIO.BCM)
+BCM_LIST = [14, 23, 24]
+LINE_LIST = []
+
+init_script()
+dotori_server = set_dotori_server_config_script()
+
 i = 0
-dots = 'now loading.'
-while i <= 3:
-    time.sleep(1)
-    if (i == 0):
-        os.system('clear')
-    print(dots)
+while i < len(BCM_LIST):
+    if i != 0:
+        res = input('생산 라인 추가를 중지하려면 0, 추가 하시려면 아무키나 눌러주세요.')
+        if res == '0':
+            break
+    genLine = line(BCM_LIST[i], len(LINE_LIST))
+    filledGenLine = set_line_config_script(genLine)
+    LINE_LIST.append(filledGenLine)
     i += 1
-    dots += '..'
-time.sleep(1)
 os.system('clear')
 
-print('-----------------------------------')
-print('0. 도메인 주소를 입력해주세요. (기본:https://api.dotoritory.com) ')
-addr = input()
-if (addr == ''): addr = 'https://api.dotoritory.com'
-print('1. device 토큰을 입력해주세요.')
-token = input()
-if (token == ''):
-    raise ValueError('token값은 필수적으로 입력돼야 합니다.')
+print('생산 라인 설정 완료')
 
-print('2. 생산 라인번호를 입력해주세요. (기본: 0)')
-produceLineId = input()
-print('3-1. 생산 수량을 입력해주세요. (기본: 1)')
-qty = input()
-if (qty == ''): qty = 1
-print('3-2. 불량 수량을 입력해주세요. (기본: 0)')
-inferiorQty = input()
-if (inferiorQty == ''): inferiorQty = 0
-pirPin = 7
-GPIO.setmode(GPIO.BCM)
-GPIO.setup(pirPin, GPIO.IN)
-latest = 0
-
-# request config
-path = '/device/auto'
-URL = addr + path
-headers = {'Content-Type': 'application/json; charset=utf-8', 'Authorization': 'Bearer ' + token}
-data = {'qty': qty, 'inferiorQty': inferiorQty, 'produceLineId': produceLineId}
-
-while True:
-    current = GPIO.input(pirPin)
-    if current == 0 & current != latest:
-        print('censored')
-        res = requests.get(URL, headers=headers, data=data)
-        print(res)
-    latest = current
-    time.sleep(0.2)
+for l in LINE_LIST:
+    l.self_introduce()
+    cb = l.make_callback(dotori_server)
+    l.io_initialize(cb)
+try:
+    while 1:
+        print(".")
+        time.sleep(0.1)
+finally:
+    GPIO.cleanup()
